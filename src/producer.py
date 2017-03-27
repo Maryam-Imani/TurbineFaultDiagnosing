@@ -3,7 +3,7 @@
 Created on Fri Dec 23 15:06:02 2016
 
 
-python producer.py /home/maryam/Desktop/Kafka/SparkDBFE.txt 10.176.148.123 9092
+python producer.py /SparkDBFE.txt 10.176.148.123 9092
 
 @author: mary
 """
@@ -30,7 +30,7 @@ if __name__ == "__main__":
         startTime = time.time()
         for line in lines: 
             producer.send('test', line)
-            sleep(0.001)
+            #sleep(0.001)
     
     print (time.time()- startTime)
     producer.send('test', 'end')
