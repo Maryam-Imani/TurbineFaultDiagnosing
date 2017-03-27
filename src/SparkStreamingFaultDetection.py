@@ -6,7 +6,7 @@
  To run this on your local machine, you need to first run a Kafka server
     `$ `
  and then run the example
- bin/spark-submit  --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.1 /home/maryam/Desktop/Kafka/SparkStreamingFaultDetection.py localhost:9092 test
+ bin/spark-submit  --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.1 /path/to/SparkStreamingFaultDetection.py localhost:9092 <topic>
 """
 from __future__ import print_function
 
@@ -32,7 +32,7 @@ from datetime import datetime
 
 counts = 0
 totalTime = 0
-path= '/home/maryam/Desktop/Kafka/output/new/outputE4.txt'
+path= '/outputE4.txt'
 
 def feature_extract(sigList,order):
     WIN_LEN = 256
@@ -93,7 +93,6 @@ def echo(time, rdd):
         with open(path,'a') as fileW:
             fileW.write(output + '\n')
             fileW.flush()
-        #rdd.saveAsTextFile("/home/maryam/Desktop/Kafka/output.txt")
         print ('***********************')
     else:
         print("No data received")
@@ -135,7 +134,7 @@ if __name__ == "__main__":
          )
     
     sc = SparkContext(conf = conf)
-    model =  RandomForestModel.load(sc, '/home/maryam/Desktop/Kafka/RandomForest1.model')
+    model =  RandomForestModel.load(sc, '/RandomForest1.model')
 
     ssc = StreamingContext(sc, 1 )
 
@@ -175,7 +174,7 @@ if __name__ == "__main__":
         
         predictions.foreachRDD(echo)
     #predictions.foreachRDD (lambda rdd: printing(rdd, testErr))
-    #predictions.saveAsTextFile("/home/maryam/Desktop/Kafka/output.txt")
+    #predictions.saveAsTextFile("/output.txt")
     
         print('********')
         
