@@ -6,8 +6,6 @@ Created on Thu Jan 26 19:04:23 2017
 @author: maryam
 """
 
-#[ str(i[0]) for i in np.loadtxt(c)]
-
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 import time
@@ -64,7 +62,7 @@ OveralAccuracy = 0
 
 startTime = time.time()
 
-trainSignalData= np.loadtxt('/home/maryam/Desktop/Kafka/SparkDBFE2.txt', delimiter=",")
+trainSignalData= np.loadtxt('./SparkDBFE2.txt', delimiter=",")
 
 N , M = np.shape(trainSignalData)
 
