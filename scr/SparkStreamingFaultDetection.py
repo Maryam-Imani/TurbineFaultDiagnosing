@@ -6,7 +6,7 @@
  To run this on your local machine, you need to first run a Kafka server
     `$ `
  and then run the example
- bin/spark-submit  --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.1 /home/maryam/Desktop/Kafka/SparkStreamingFaultDetection.py localhost:9092 test
+ bin/spark-submit  --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.0.1 /path/to/SparkStreamingFaultDetection.py localhost:9092 <topic>
 """
 from __future__ import print_function
 
