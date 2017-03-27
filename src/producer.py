@@ -3,7 +3,7 @@
 Created on Fri Dec 23 15:06:02 2016
 
 
-python producer.py /SparkDBFE.txt 10.176.148.123 9092
+python producer.py /SparkDBFE.txt <ip> <port>
 
 @author: mary
 """
