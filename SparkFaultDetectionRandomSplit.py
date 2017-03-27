@@ -75,7 +75,7 @@ def feature_extract1D(sigList, order):
 #        exit(-1)
 #    Signal = float(sys.argv[0])
 #    Order = int(sys.argv[1])
-#   fileInput= open('/home/maryam/Desktop/Kafka/SparkDB.txt', 'r')
+#   fileInput= open('/SparkDB.txt', 'r')
 #   kf = KFold(n_splits=10)
 #   kf.get_n_splits(X)
    
@@ -86,7 +86,7 @@ Order = 10
 #training Data
 startTime = time.time()
 
-trainSignalData = sc.textFile('/home/maryam/Desktop/Kafka/SparkDBFE2.txt')
+trainSignalData = sc.textFile('/SparkDBFE2.txt')
 
 (trainingData, testData) = trainSignalData.randomSplit([0.01, 0.99])
 
