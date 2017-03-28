@@ -3,14 +3,16 @@
 """
 Created on Thu Jan 26 19:04:23 2017
 
+python FaultDetectionRandomSplit.py </path/to/dataset> <order>
 @author: maryam
 """
 
+#[ str(i[0]) for i in np.loadtxt(c)]
+
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-import time
+import time, sys
 from sklearn.metrics import accuracy_score
-from sklearn.metrics import precision_recall_curve
 
 
 def feature_extract(sigList,order):
@@ -56,45 +58,53 @@ def feature_extract1D(sigList, order):
     return k
 
 
-Order= 10
-kFold = 1
-OveralAccuracy = 0
-
-startTime = time.time()
-
-trainSignalData= np.loadtxt('./SparkDBFE2.txt', delimiter=",")
-
-N , M = np.shape(trainSignalData)
-
-print (str(N) +', '+ str(M))
-#trainSignalData= np.random.shuffle(trainSignalData)
-trainingData = trainSignalData[:int(N*0.99),:]
-testData= trainSignalData[int(N*0.99):,:]
-
-
-#trainDataset= [feature_extract(row[1:], Order)  for row in trainingData]
-trainDataset= trainingData[:,1:]
-trainLabel= [ int(i[0])-1 for i in trainingData]
-
-rf = RandomForestClassifier(n_estimators=3, max_depth=4)
-rf.fit(trainDataset, trainLabel) 
-
-trainTime= time.time()
-print("---train %s seconds ---" % (trainTime - startTime))
+if __name__ == "__main__":
     
-#testDataset= [feature_extract(row[1:], Order)  for row in testData]
-testDataset = testData[:,1:]
-testLabel= [ int(i[0]) for i in testData]
- 
-result= rf.predict(testDataset)
-#np.save('./Sentence/resultSentAll2', result)
-
-print("---test %s seconds ---" % (time.time() - trainTime))
-
-accuracy = accuracy_score(testLabel, result)
-#precision, recall, thresholds = precision_recall_curve(testLabel, result)
-
-OveralAccuracy += accuracy
+    if len(sys.argv) != 3:
+        print('Number of input is less than required')
+        exit(-1)
+        
+    filename= sys.argv[1]
+    Order= int(sys.argv[2])
 
 
-print('OveralAccuracy: '+ str(OveralAccuracy ))
+    OveralAccuracy = 0
+    
+    startTime = time.time()
+    
+    trainSignalData= np.loadtxt(filename, delimiter=",")
+    
+    N , M = np.shape(trainSignalData)
+    
+    print (str(N) +', '+ str(M))
+    #trainSignalData= np.random.shuffle(trainSignalData)
+    trainingData = trainSignalData[:int(N*0.90),:]
+    testData= trainSignalData[int(N*0.90):,:]
+    
+    
+    #trainDataset= [feature_extract(row[1:], Order)  for row in trainingData]
+    trainDataset= trainingData[:,1:]
+    trainLabel= [ int(i[0])-1 for i in trainingData]
+    
+    rf = RandomForestClassifier(n_estimators=3, max_depth=4)
+    rf.fit(trainDataset, trainLabel) 
+    
+    trainTime= time.time()
+    print("---train %s seconds ---" % (trainTime - startTime))
+        
+    #testDataset= [feature_extract(row[1:], Order)  for row in testData]
+    testDataset = testData[:,1:]
+    testLabel= [ int(i[0]) for i in testData]
+     
+    result= rf.predict(testDataset)
+    #np.save('./Sentence/resultSentAll2', result)
+    
+    print("---test %s seconds ---" % (time.time() - trainTime))
+    
+    accuracy = accuracy_score(testLabel, result)
+    #precision, recall, thresholds = precision_recall_curve(testLabel, result)
+    
+    OveralAccuracy += accuracy
+    
+    
+    print('OveralAccuracy: '+ str(OveralAccuracy ))
