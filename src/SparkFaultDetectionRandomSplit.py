@@ -15,8 +15,6 @@ os.environ['SPARK_HOME']="/usr/local/spark"
 # Append pyspark to Python Path
 sys.path.append("/usr/local/spark/python")
 sys.path.append("/usr/local/spark/python/lib/py4j-0.10.4-src.zip")
-#sys.path.append("/media/maryam/DATAPART1/UTD courses/Big Data/spark-2.0.1-bin-hadoop2.7/python/lib/pyspark.zip")
-#sys.path.append("/media/maryam/DATAPART1/UTD courses/Big Data/spark-2.0.1-bin-hadoop2.7/python/pyspark") 
 
 from pyspark import SparkContext
 sc = SparkContext()
