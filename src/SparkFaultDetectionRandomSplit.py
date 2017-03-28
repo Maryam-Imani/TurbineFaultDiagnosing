@@ -4,7 +4,7 @@ Created on Tue Jan 10 23:42:58 2017
 
 @author: maryam
 
-python FaultDetectionRandomSplit.py </path/to/dataset> <order>
+bin/spark-submit /path/to/SparkFaultDetectionRandomSplit.py </path/to/dataset> <order>
 
 """
 import sys, os
@@ -66,7 +66,6 @@ def feature_extract1D(sigList, order):
     return k
     
 
-   
 if __name__ == "__main__":
     
     if len(sys.argv) != 3:
@@ -75,46 +74,41 @@ if __name__ == "__main__":
         
     filename= sys.argv[1]
     Order= int(sys.argv[2])
-
-
-    OveralAccuracy = 0
+    #Order = 10
     
+    #training Data
     startTime = time.time()
     
-    trainSignalData= np.loadtxt(filename, delimiter=",")
+    trainSignalData = sc.textFile(filename)
     
-    N , M = np.shape(trainSignalData)
+    (trainingData, testData) = trainSignalData.randomSplit([0.9, 0.1])
     
-    print (str(N) +', '+ str(M))
-    #trainSignalData= np.random.shuffle(trainSignalData)
-    trainingData = trainSignalData[:int(N*0.90),:]
-    testData= trainSignalData[int(N*0.90):,:]
+    #trainData = trainingData.map(lambda row: LabeledPoint( int(row.split(',')[0]) -1, feature_extract(row.split(',')[1:], Order)) )
+    trainData = trainingData.map(lambda row: LabeledPoint( float(row.split(',')[0]) -1, [float(i) for i in row.split(',')[1:]] )) 
+    #print trainData.collect()
     
-    
-    #trainDataset= [feature_extract(row[1:], Order)  for row in trainingData]
-    trainDataset= trainingData[:,1:]
-    trainLabel= [ int(i[0])-1 for i in trainingData]
-    
-    rf = RandomForestClassifier(n_estimators=3, max_depth=4)
-    rf.fit(trainDataset, trainLabel) 
+    # train the Random Forest Model
+    model = RandomForest.trainClassifier(trainData, numClasses=2, categoricalFeaturesInfo={},\
+                                     numTrees=3, featureSubsetStrategy="auto",\
+                                     impurity='gini', maxDepth=4, maxBins=32)
     
     trainTime= time.time()
     print("---train %s seconds ---" % (trainTime - startTime))
-        
-    #testDataset= [feature_extract(row[1:], Order)  for row in testData]
-    testDataset = testData[:,1:]
-    testLabel= [ int(i[0]) for i in testData]
-     
-    result= rf.predict(testDataset)
-    #np.save('./Sentence/resultSentAll2', result)
     
-    print("---test %s seconds ---" % (time.time() - trainTime))
+    # save and load model
+    model.save(sc, 'RandomForest1.model')
+    #model =  RandomForestModel.load(sc, 'RandomForest.model')
     
-    accuracy = accuracy_score(testLabel, result)
-    #precision, recall, thresholds = precision_recall_curve(testLabel, result)
+    #testing Data
+    testTime= time.time()
+    #testData = testData.map(lambda row: LabeledPoint( int(row.split(',')[0]) -1, feature_extract((row.split(',')[1:]), Order)) )
+    testData = testData.map(lambda row: LabeledPoint( float(row.split(',')[0]) -1, [float(i) for i in row.split(',')[1:]] )) 
     
-    OveralAccuracy += accuracy
+    # Predict the test data label
+    predictions = model.predict(testData.map(lambda x: x.features))
     
+    print("---test %s seconds ---" % (time.time() - testTime))
     
-    print('OveralAccuracy: '+ str(OveralAccuracy ))
-
+    labelsAndPredictions = testData.map(lambda lp: lp.label).zip(predictions)
+    testErr = labelsAndPredictions.filter(lambda (v, p): v != p).count() / float(testData.count())
+    print('Test Error = ' + str(testErr))
