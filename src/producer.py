@@ -2,13 +2,10 @@
 """
 Created on Fri Dec 23 15:06:02 2016
 
-
-python producer.py /SparkDBFE.txt <ip> <port>
-
-@author: mary
+python producer.py /path/to/dataset <consumer-ip> <port>
+@author: maryam
 """
 
-#simple_producer.py
 from kafka import KafkaProducer
 from time import sleep
 import sys, time
@@ -23,7 +20,7 @@ if __name__ == "__main__":
     with open(filename,'r') as f:
         lines= f.readlines()
     
-    producer.send('test', 'start')
+#    producer.send('test', 'start')
     
 #    while True:
     for i in range(0, 1):
@@ -33,4 +30,4 @@ if __name__ == "__main__":
             #sleep(0.001)
     
     print (time.time()- startTime)
-    producer.send('test', 'end')
+#    producer.send('test', 'end')
