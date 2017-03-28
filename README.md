@@ -11,4 +11,17 @@ To run the producer.py:
 python producer.py /path/to/dataset <IP> <port>
 ```
 
+To run the FaultDetectionRandomSplit.py, execute the following command: 
+
+```python
+python FaultDetectionRandomSplit.py </path/to/dataset> <order>
+```
+
+To run the SparkFaultDetectionRandomSplit.py: 
+
+In the Spark directory, run the following command: 
+
+```python
+bin/spark-submit /path/to/SparkFaultDetectionRandomSplit.py </path/to/dataset> <order>
+```
 
