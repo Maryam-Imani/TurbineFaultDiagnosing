@@ -3,7 +3,7 @@ Code of spark-based turbines' fault diagnosing
 
 To run the producer.py: 
 
-1- Start Kafka in both producer and customer with the same topic
+1- Start Kafka in both producer and consumer with the same topic
 (http://kafka.apache.org/quickstart)
 
 2- Execute the following command: 
